@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浪漫桃心烟花效果</title>
+    <style>
+        /* 星空背景 */
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #00132e, #220066, #4b0082, #6600cc);
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* 桃心形状 */
+        .heart {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            background: linear-gradient(135deg, #ff77a9, #ff1744);
+            border-radius: 50%;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        .heart::before, .heart::after {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -75px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: 75px;
+        }
+
+        /* 鼠标点击生成烟花星星效果 */
+        .firework-star {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(45deg, #ffeb3b, #ff6d00, #ff1744);
+            border-radius: 50%;
+            animation: explode 0.8s ease-out forwards;
+            pointer-events: none;
+        }
+
+        /* 烟花星星动画 */
+        @keyframes explode {
+            0% { transform: scale(1) translate(0, 0); opacity: 1; }
+            100% { transform: scale(0.3) translate(var(--x), var(--y)); opacity: 0; }
+        }
+
+        /* 桃心发光动画 */
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 23, 68, 0.6); }
+            50% { box-shadow: 0 0 30px rgba(255, 23, 68, 1); }
+        }
+    </style>
+</head>
+<body onclick="createFirework(event)">
+    <!-- 正对的浪漫桃心 -->
+    <div class="heart"></div>
+
+    <script>
+        // 点击生成烟花效果
+        function createFirework(event) {
+            const numStars = 20; // 星星数量
+            const angleStep = 360 / numStars; // 每颗星星的角度间隔
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement("div");
+                star.classList.add("firework-star");
+
+                // 随机烟花星星的飞行距离
+                const distance = Math.random() * 60 + 40;
+                const angle = i * angleStep;
+                const radians = angle * (Math.PI / 180);
+                const x = Math.cos(radians) * distance;
+                const y = Math.sin(radians) * distance;
+
+                // 设置星星位置和动画的方向
+                star.style.left = `${event.clientX}px`;
+                star.style.top = `${event.clientY}px`;
+                star.style.setProperty('--x', `${x}px`);
+                star.style.setProperty('--y', `${y}px`);
+
+                // 将星星添加到页面中
+                document.body.appendChild(star);
+
+                // 动画结束后移除星星
+                star.addEventListener("animationend", () => {
+                    star.remove();
+                });
+            }
+        }
+    </script>
+</body>
+</html>
